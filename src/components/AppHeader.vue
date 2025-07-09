@@ -1,7 +1,7 @@
 <template>
-  <header class="bg-gray-800 text-white text-center py-4">
-    <h1 class="text-2xl font-bold">
-      <i class="fas fa-car mr-2"></i>Car Rental
+  <header class="bg-gray-800 text-white text-center py-[19px]">
+    <h1 class="text-2xl font-bold flex items-center justify-center">
+      <img src="../assets/logo.svg" alt="Logo" />
     </h1>
   </header>
 </template>

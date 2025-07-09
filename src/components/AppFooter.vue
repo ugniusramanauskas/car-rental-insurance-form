@@ -1,5 +1,5 @@
 <template>
-  <footer class="text-center text-sm text-gray-500 py-4">
+  <footer class="text-center text-sm text-gray-500 py-[10px]">
     <nav class="space-x-4">
       <a href="#">About Us</a>
       <a href="#">Privacy Policy</a>
