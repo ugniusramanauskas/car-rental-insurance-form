@@ -1,11 +1,13 @@
 <template>
-  <div class="min-h-screen bg-gray-100 flex flex-col gap-9 pb-[34px]">
+  <div
+    class="min-h-screen bg-gray-100 flex flex-col gap-9 pb-[34px] font-helvetica"
+  >
     <AppHeader />
 
     <main class="flex-grow flex items-center justify-center">
       <form
         @submit.prevent="submit"
-        class="bg-white p-8 rounded shadow-md w-full max-w-[408px]"
+        class="bg-white p-10 rounded w-full max-w-[408px]"
       >
         <h2 class="text-xl font-bold mb-6 text-center">
           Get your Car Insurance for $9.99
@@ -94,86 +96,135 @@
             label="Gender"
             :error="v$.gender.$error ? 'Please select your gender' : undefined"
           >
-            <div class="flex gap-4">
-              <label class="flex items-center gap-1">
-                <input v-model="form.gender" type="radio" value="female" />
-                Female
+            <div class="grid grid-cols-2 gap-3">
+              <label
+                class="flex relative grow items-center justify-start gap-2 px-6 py-2 border rounded cursor-pointer transition-all text-sm font-medium focus:outline-none h-[43px]"
+                :class="{
+                  'bg-[#2888E0] text-white border-[#2888E0]':
+                    form.gender === 'female',
+                  'text-gray-900 bg-white border-[#D8D6D6]':
+                    form.gender !== 'female',
+                }"
+              >
+                <span
+                  class="w-4 h-4 rounded-full border-4 flex items-center justify-center peer-checked:bg-white border-white shadow-custom-glow peer-checked:shadow-glow-soft transition-all"
+                >
+                  <span
+                    class="w-2 h-2 rounded-full bg-[#2888E0] peer-checked:block hidden"
+                  ></span>
+                </span>
+                <input
+                  v-model="form.gender"
+                  type="radio"
+                  value="female"
+                  class="sr-only peer"
+                />
+                <span class="text-[#2F2F30] peer-checked:text-white font-normal"
+                  >Female</span
+                >
               </label>
-              <label class="flex items-center gap-1">
-                <input v-model="form.gender" type="radio" value="male" />
-                Male
+
+              <label
+                class="flex relative grow items-center justify-start gap-2 px-6 py-2 border rounded cursor-pointer transition-all text-sm font-medium focus:outline-none h-[43px]"
+                :class="{
+                  'bg-[#2888E0] text-white border-[#2888E0]':
+                    form.gender === 'male',
+                  'text-gray-900 bg-white border-[#D8D6D6]':
+                    form.gender !== 'male',
+                }"
+              >
+                <span
+                  class="w-4 h-4 rounded-full border-4 flex items-center justify-center peer-checked:bg-white border-white shadow-custom-glow peer-checked:shadow-glow-soft transition-all"
+                >
+                  <span
+                    class="w-2 h-2 rounded-full bg-[#2888E0] peer-checked:block hidden"
+                  ></span>
+                </span>
+                <input
+                  v-model="form.gender"
+                  type="radio"
+                  value="male"
+                  class="sr-only peer"
+                />
+                <span class="text-[#2F2F30] peer-checked:text-white font-normal"
+                  >Male</span
+                >
               </label>
             </div>
           </FormField>
 
-          <FormField
-            label="Card Holder Name"
-            :error="
-              v$.cardHolder.$error
-                ? String(v$.cardHolder.$errors[0].$message)
-                : undefined
-            "
+          <div
+            class="border pt-4 px-6 pb-6 bg-[#FAFAFA] rounded grid grid-cols-1 gap-3"
           >
-            <input
-              v-model="form.cardHolder"
-              type="text"
-              placeholder="Card Holder Name"
-              :class="['input', { 'border-red-500': v$.cardHolder.$error }]"
-            />
-          </FormField>
-
-          <FormField
-            label="Card Number"
-            :error="
-              v$.cardNumber.$error
-                ? String(v$.cardNumber.$errors[0].$message)
-                : undefined
-            "
-          >
-            <input
-              v-model="form.cardNumber"
-              type="text"
-              placeholder="Card Number"
-              :class="['input', { 'border-red-500': v$.cardNumber.$error }]"
-            />
-          </FormField>
-
-          <div class="flex gap-2">
             <FormField
-              label="Expiry Date"
+              label="Card Holder Name"
               :error="
-                v$.expiry.$error
-                  ? String(v$.expiry.$errors[0].$message)
+                v$.cardHolder.$error
+                  ? String(v$.cardHolder.$errors[0].$message)
                   : undefined
               "
             >
               <input
-                v-model="form.expiry"
+                v-model="form.cardHolder"
                 type="text"
-                placeholder="MM/YY"
-                :class="['input', { 'border-red-500': v$.expiry.$error }]"
+                placeholder="Card Holder Name"
+                :class="['input', { 'border-red-500': v$.cardHolder.$error }]"
               />
             </FormField>
+
             <FormField
-              label="CVV"
+              label="Card Number"
               :error="
-                v$.cvv.$error ? String(v$.cvv.$errors[0].$message) : undefined
+                v$.cardNumber.$error
+                  ? String(v$.cardNumber.$errors[0].$message)
+                  : undefined
               "
             >
               <input
-                v-model="form.cvv"
+                v-model="form.cardNumber"
                 type="text"
-                placeholder="CVV"
-                :class="['input', { 'border-red-500': v$.cvv.$error }]"
+                placeholder="Card Number"
+                :class="['input', { 'border-red-500': v$.cardNumber.$error }]"
               />
             </FormField>
+
+            <div class="flex gap-2">
+              <FormField
+                label="Expiry Date"
+                :error="
+                  v$.expiry.$error
+                    ? String(v$.expiry.$errors[0].$message)
+                    : undefined
+                "
+              >
+                <input
+                  v-model="form.expiry"
+                  type="text"
+                  placeholder="MM/YY"
+                  :class="['input', { 'border-red-500': v$.expiry.$error }]"
+                />
+              </FormField>
+              <FormField
+                label="CVV"
+                :error="
+                  v$.cvv.$error ? String(v$.cvv.$errors[0].$message) : undefined
+                "
+              >
+                <input
+                  v-model="form.cvv"
+                  type="text"
+                  placeholder="CVV"
+                  :class="['input', { 'border-red-500': v$.cvv.$error }]"
+                />
+              </FormField>
+            </div>
           </div>
 
           <button
             type="submit"
-            class="w-full bg-green-500 text-white py-2 rounded hover:bg-green-600"
+            class="w-full bg-[#22C55E] text-white py-2 rounded hover:bg-green-600 h-[50px]"
           >
-            CONTINUE
+            <span class="text-[18px] font-semibold">CONTINUE</span>
           </button>
         </div>
       </form>
