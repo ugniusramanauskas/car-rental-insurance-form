@@ -10,6 +10,10 @@
   }
 }
 
+input[type='radio'] {
+  @apply w-4 h-4 accent-blue-900 checked:accent-blue-900 border-white;
+}
+
 /* :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
