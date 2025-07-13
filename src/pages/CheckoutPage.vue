@@ -15,14 +15,8 @@
           </h2>
 
           <div class="grid grid-cols-1 gap-1">
-            <FormField
-              label="Full Name"
-              :error="
-                v$.fullName.$error
-                  ? String(v$.fullName.$errors[0].$message)
-                  : undefined
-              "
-            >
+            <!-- Personal Information -->
+            <FormField label="Full Name" :error="getFieldError('fullName')">
               <input
                 v-model="form.fullName"
                 type="text"
@@ -31,14 +25,7 @@
               />
             </FormField>
 
-            <FormField
-              label="Email"
-              :error="
-                v$.email.$error
-                  ? String(v$.email.$errors[0].$message)
-                  : undefined
-              "
-            >
+            <FormField label="Email" :error="getFieldError('email')">
               <input
                 v-model="form.email"
                 type="email"
@@ -47,12 +34,7 @@
               />
             </FormField>
 
-            <FormField
-              label="Zip Code"
-              :error="
-                v$.zip.$error ? String(v$.zip.$errors[0].$message) : undefined
-              "
-            >
+            <FormField label="Zip Code" :error="getFieldError('zip')">
               <input
                 v-model="form.zip"
                 type="text"
@@ -61,119 +43,38 @@
               />
             </FormField>
 
-            <FormField label="Date of Birth" :error="birthDateError">
-              <div class="flex gap-2">
-                <div class="flex-1">
-                  <select
-                    v-model="form.birthMonth"
-                    :class="[
-                      'input',
-                      { 'border-red-500': v$.birthMonth.$error },
-                    ]"
-                  >
-                    <option disabled value="">Month</option>
-                    <option v-for="m in 12" :key="m" :value="m">{{ m }}</option>
-                  </select>
-                </div>
-                <div class="flex-1">
-                  <select
-                    v-model="form.birthDay"
-                    :class="['input', { 'border-red-500': v$.birthDay.$error }]"
-                  >
-                    <option disabled value="">Day</option>
-                    <option v-for="d in 31" :key="d" :value="d">{{ d }}</option>
-                  </select>
-                </div>
-                <div class="flex-1">
-                  <select
-                    v-model="form.birthYear"
-                    :class="[
-                      'input',
-                      { 'border-red-500': v$.birthYear.$error },
-                    ]"
-                  >
-                    <option disabled value="">Year</option>
-                    <option v-for="y in years" :key="y" :value="y">
-                      {{ y }}
-                    </option>
-                  </select>
-                </div>
-              </div>
-            </FormField>
+            <!-- Date of Birth -->
+            <DateSelector
+              label="Date of Birth"
+              :error="birthDateError"
+              :has-error="
+                v$.birthMonth.$error ||
+                v$.birthDay.$error ||
+                v$.birthYear.$error
+              "
+              :month-value="form.birthMonth"
+              :day-value="form.birthDay"
+              :year-value="form.birthYear"
+              @update:month="form.birthMonth = $event"
+              @update:day="form.birthDay = $event"
+              @update:year="form.birthYear = $event"
+            />
 
-            <FormField
+            <!-- Gender Selection -->
+            <RadioGroup
               label="Gender"
+              v-model="form.gender"
               :error="
                 v$.gender.$error ? 'Please select your gender' : undefined
               "
-            >
-              <div class="grid grid-cols-2 gap-3">
-                <label
-                  class="flex relative grow items-center justify-start gap-2 px-6 py-2 border rounded cursor-pointer transition-all duration-300 text-sm font-medium focus:outline-none h-[43px] transform hover:scale-105"
-                  :class="{
-                    'bg-[#2888E0] text-white border-[#2888E0]':
-                      form.gender === 'female',
-                    'text-gray-900 bg-white border-[#D8D6D6]':
-                      form.gender !== 'female',
-                  }"
-                >
-                  <span
-                    class="w-4 h-4 rounded-full border-4 flex items-center justify-center peer-checked:bg-white border-white shadow-custom-glow peer-checked:shadow-glow-soft transition-all"
-                  >
-                    <span
-                      class="w-2 h-2 rounded-full bg-[#2888E0] peer-checked:block hidden"
-                    ></span>
-                  </span>
-                  <input
-                    v-model="form.gender"
-                    type="radio"
-                    value="female"
-                    class="sr-only peer"
-                  />
-                  <span
-                    class="text-[#2F2F30] peer-checked:text-white font-normal"
-                    >Female</span
-                  >
-                </label>
+              :options="genderOptions"
+            />
 
-                <label
-                  class="flex relative grow items-center justify-start gap-2 px-6 py-2 border rounded cursor-pointer transition-all duration-300 text-sm font-medium focus:outline-none h-[43px] transform hover:scale-105"
-                  :class="{
-                    'bg-[#2888E0] text-white border-[#2888E0]':
-                      form.gender === 'male',
-                    'text-gray-900 bg-white border-[#D8D6D6]':
-                      form.gender !== 'male',
-                  }"
-                >
-                  <span
-                    class="w-4 h-4 rounded-full border-4 flex items-center justify-center peer-checked:bg-white border-white shadow-custom-glow peer-checked:shadow-glow-soft transition-all"
-                  >
-                    <span
-                      class="w-2 h-2 rounded-full bg-[#2888E0] peer-checked:block hidden"
-                    ></span>
-                  </span>
-                  <input
-                    v-model="form.gender"
-                    type="radio"
-                    value="male"
-                    class="sr-only peer"
-                  />
-                  <span
-                    class="text-[#2F2F30] peer-checked:text-white font-normal"
-                    >Male</span
-                  >
-                </label>
-              </div>
-            </FormField>
-
-            <div class="border pt-4 px-6 pb-2 bg-[#FAFAFA] rounded">
+            <!-- Payment Information -->
+            <PaymentSection>
               <FormField
                 label="Card Holder Name"
-                :error="
-                  v$.cardHolder.$error
-                    ? String(v$.cardHolder.$errors[0].$message)
-                    : undefined
-                "
+                :error="getFieldError('cardHolder')"
               >
                 <input
                   v-model="form.cardHolder"
@@ -185,11 +86,7 @@
 
               <FormField
                 label="Card Number"
-                :error="
-                  v$.cardNumber.$error
-                    ? String(v$.cardNumber.$errors[0].$message)
-                    : undefined
-                "
+                :error="getFieldError('cardNumber')"
               >
                 <input
                   ref="cardNumberInput"
@@ -201,14 +98,7 @@
               </FormField>
 
               <div class="flex gap-2">
-                <FormField
-                  label="Expiry Date"
-                  :error="
-                    v$.expiry.$error
-                      ? String(v$.expiry.$errors[0].$message)
-                      : undefined
-                  "
-                >
+                <FormField label="Expiry Date" :error="getFieldError('expiry')">
                   <input
                     ref="expiryInput"
                     v-model="form.expiry"
@@ -217,14 +107,7 @@
                     :class="['input', { 'border-red-500': v$.expiry.$error }]"
                   />
                 </FormField>
-                <FormField
-                  label="CVV"
-                  :error="
-                    v$.cvv.$error
-                      ? String(v$.cvv.$errors[0].$message)
-                      : undefined
-                  "
-                >
+                <FormField label="CVV" :error="getFieldError('cvv')">
                   <input
                     v-model="form.cvv"
                     type="text"
@@ -233,7 +116,7 @@
                   />
                 </FormField>
               </div>
-            </div>
+            </PaymentSection>
           </div>
 
           <button
@@ -289,139 +172,43 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, computed, onMounted, watch, ref } from 'vue';
-import { useVuelidate } from '@vuelidate/core';
-import { required, email, minLength, helpers } from '@vuelidate/validators';
+import { onMounted, watch, ref } from 'vue';
 import AppHeader from '@/components/AppHeader.vue';
 import AppFooter from '@/components/AppFooter.vue';
 import FormField from '@/components/FormField.vue';
-import Cleave from 'cleave.js';
-import axios from 'axios';
+import DateSelector from '@/components/DateSelector.vue';
+import RadioGroup from '@/components/RadioGroup.vue';
+import PaymentSection from '@/components/PaymentSection.vue';
+import { useCheckoutValidation } from '@/composables/useCheckoutValidation';
+import { useCheckoutServices } from '@/composables/useCheckoutServices';
 
 const isSubmitting = ref(false);
 const showSuccess = ref(false);
 const cardNumberInput = ref<HTMLInputElement | null>(null);
 const expiryInput = ref<HTMLInputElement | null>(null);
 
-const form = reactive({
-  fullName: '',
-  email: '',
-  zip: '',
-  birthMonth: '',
-  birthDay: '',
-  birthYear: '',
-  gender: '',
-  cardHolder: '',
-  cardNumber: '',
-  expiry: '',
-  cvv: '',
-});
+// Use composables
+const { form, v$, birthDateError, clearForm } = useCheckoutValidation();
+const { fetchZipCode, initializeCleave, setRandomGender } =
+  useCheckoutServices(form);
 
-// Custom validators
-const isValidFullName = helpers.withMessage(
-  'Enter at least two words, 2+ letters each',
-  (value: string) => {
-    if (!value) return false;
-    const words = value.trim().split(/\s+/);
-    return words.length >= 2 && words.every((word) => word.length >= 2);
-  }
-);
+// Gender options for RadioGroup
+const genderOptions = [
+  { value: 'female', label: 'Female' },
+  { value: 'male', label: 'Male' },
+];
 
-const isValidCardNumber = helpers.withMessage(
-  'Card number must be 16 digits',
-  (value: string) => !value || /^\d{16}$/.test(value.replace(/\s/g, ''))
-);
-
-const isValidExpiry = helpers.withMessage(
-  "Can't be in the past",
-  (value: string) => {
-    if (!value || !/^(0[1-9]|1[0-2])\/\d{2}$/.test(value)) return false;
-    const [month, year] = value.split('/');
-    const currentDate = new Date();
-    const currentYear = currentDate.getFullYear() % 100;
-    const currentMonth = currentDate.getMonth() + 1;
-
-    const expYear = parseInt(year);
-    const expMonth = parseInt(month);
-
-    if (expYear > currentYear) return true;
-    if (expYear === currentYear && expMonth >= currentMonth) return true;
-    return false;
-  }
-);
-
-const isValidCVV = helpers.withMessage(
-  'CVV must be 3 digits',
-  (value: string) => !value || /^\d{3}$/.test(value)
-);
-
-const isValidZip = helpers.withMessage(
-  'Zip code must be 5 digits',
-  (value: string) => !value || /^\d{5}$/.test(value)
-);
-
-const isValidAge = helpers.withMessage(
-  'You must be at least 18 years old',
-  () => {
-    if (!form.birthMonth || !form.birthDay || !form.birthYear) return false;
-    const birthDate = new Date(
-      parseInt(form.birthYear),
-      parseInt(form.birthMonth) - 1,
-      parseInt(form.birthDay)
-    );
-    const today = new Date();
-    const age = today.getFullYear() - birthDate.getFullYear();
-    const monthDiff = today.getMonth() - birthDate.getMonth();
-
-    if (
-      monthDiff < 0 ||
-      (monthDiff === 0 && today.getDate() < birthDate.getDate())
-    ) {
-      return age - 1 >= 18;
-    }
-    return age >= 18;
-  }
-);
-
-// Validation rules
-const rules = {
-  fullName: { required, isValidFullName },
-  email: { required, email },
-  zip: { required, isValidZip },
-  birthMonth: { required },
-  birthDay: { required },
-  birthYear: { required, isValidAge },
-  gender: { required },
-  cardHolder: { required, minLength: minLength(2) },
-  cardNumber: { required, isValidCardNumber },
-  expiry: { required, isValidExpiry },
-  cvv: { required, isValidCVV },
+// Helper function to get field errors
+const getFieldError = (fieldName: keyof typeof v$.value) => {
+  const field = v$.value[fieldName];
+  return field.$error ? String(field.$errors[0].$message) : undefined;
 };
 
-const v$ = useVuelidate(rules, form);
-
-const years = computed(() => {
-  const current = new Date().getFullYear();
-  return Array.from({ length: 100 }, (_, i) => current - i);
-});
-
-const birthDateError = computed(() => {
-  if (
-    v$.value.birthMonth.$error ||
-    v$.value.birthDay.$error ||
-    v$.value.birthYear.$error
-  ) {
-    return 'Please select a complete date of birth';
-  }
-  return undefined;
-});
-
-// Auto-fill zip code on mount
+// Initialize on mount
 onMounted(async () => {
   await fetchZipCode();
-  initializeCleave();
-
-  form.gender = 'female';
+  initializeCleave(cardNumberInput, expiryInput);
+  setRandomGender();
 });
 
 // Watch full name and auto-fill card holder
@@ -433,49 +220,6 @@ watch(
     }
   }
 );
-
-// Auto-fill zip code using geolocation API
-async function fetchZipCode() {
-  try {
-    const response = await axios.get('https://freegeoip.live/json/');
-    if (response.data && response.data.zip_code) {
-      form.zip = response.data.zip_code;
-    }
-  } catch (error) {
-    console.warn('Could not fetch zip code from geolocation service');
-    // Fallback to second service
-    try {
-      const response = await axios.get('https://freegeoip.app/json/');
-      if (response.data && response.data.zip_code) {
-        form.zip = response.data.zip_code;
-      }
-    } catch (fallbackError) {
-      console.warn('Could not fetch zip code from fallback service');
-    }
-  }
-}
-
-// Initialize Cleave.js for card number and expiry formatting
-function initializeCleave() {
-  if (cardNumberInput.value) {
-    new Cleave(cardNumberInput.value, {
-      creditCard: true,
-      onValueChanged: (e: any) => {
-        form.cardNumber = e.target.value.replace(/\s/g, '');
-      },
-    });
-  }
-
-  if (expiryInput.value) {
-    new Cleave(expiryInput.value, {
-      date: true,
-      datePattern: ['m', 'y'],
-      onValueChanged: (e: any) => {
-        form.expiry = e.target.value;
-      },
-    });
-  }
-}
 
 async function submit() {
   isSubmitting.value = true;
@@ -509,13 +253,8 @@ async function submit() {
     await new Promise((resolve) => setTimeout(resolve, 1000));
     console.log('Form submitted:', JSON.stringify(formData, null, 2));
 
-    // Clear form
-    Object.keys(form).forEach((key) => {
-      (form as any)[key] = '';
-    });
-
-    // Reset validation
-    v$.value.$reset();
+    // Clear form and reset validation
+    clearForm();
 
     // Show success message
     showSuccess.value = true;
@@ -523,6 +262,7 @@ async function submit() {
       showSuccess.value = false;
       // Re-initialize auto-fill
       await fetchZipCode();
+      setRandomGender();
     }, 3000);
   } catch (error) {
     console.error('Form submission error:', error);
