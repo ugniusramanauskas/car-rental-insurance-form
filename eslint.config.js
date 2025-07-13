@@ -1,27 +1,39 @@
-import js from '@eslint/js';
-import typescript from '@typescript-eslint/eslint-plugin';
-import typescriptParser from '@typescript-eslint/parser';
+// eslint.config.js
 import vue from 'eslint-plugin-vue';
+import typescript from '@typescript-eslint/eslint-plugin';
+import parser from '@typescript-eslint/parser';
 
 export default [
-  js.configs.recommended,
   {
-    files: ['**/*.ts', '**/*.tsx', '**/*.vue'],
+    ignores: ['dist/**', 'node_modules/**'],
+  },
+  {
+    files: ['**/*.{js,ts,vue}'],
     languageOptions: {
-      parser: typescriptParser,
+      parser,
       parserOptions: {
         ecmaVersion: 'latest',
         sourceType: 'module',
+        project: './tsconfig.json',
+        extraFileExtensions: ['.vue'],
       },
     },
     plugins: {
-      '@typescript-eslint': typescript,
       vue,
+      '@typescript-eslint': typescript,
     },
     rules: {
-      // Prevent explicit any usage
-      '@typescript-eslint/no-explicit-any': 'error',
+      'no-explicit-any': 'error',
+      'vue/no-unused-vars': 'warn',
+      '@typescript-eslint/no-unused-vars': [
+        'warn',
+        { argsIgnorePattern: '^_' },
+      ],
+    },
+    settings: {
+      'vue': {
+        version: '3.0',
+      },
     },
   },
-  ...vue.configs['flat/recommended'],
 ];
