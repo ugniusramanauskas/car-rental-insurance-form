@@ -5,7 +5,6 @@
         <select
           v-model="month"
           :class="['input', { 'border-red-500': hasError }]"
-          @update:modelValue="updateValue"
         >
           <option disabled value="">Month</option>
           <option v-for="m in 12" :key="m" :value="m">{{ m }}</option>
@@ -15,7 +14,6 @@
         <select
           v-model="day"
           :class="['input', { 'border-red-500': hasError }]"
-          @update:modelValue="updateValue"
         >
           <option disabled value="">Day</option>
           <option v-for="d in 31" :key="d" :value="d">{{ d }}</option>
@@ -25,7 +23,6 @@
         <select
           v-model="year"
           :class="['input', { 'border-red-500': hasError }]"
-          @update:modelValue="updateValue"
         >
           <option disabled value="">Year</option>
           <option v-for="y in years" :key="y" :value="y">{{ y }}</option>
@@ -73,12 +70,6 @@ const years = computed(() => {
   return Array.from({ length: 100 }, (_, i) => current - i);
 });
 
-const updateValue = () => {
-  emit('update:month', month.value);
-  emit('update:day', day.value);
-  emit('update:year', year.value);
-};
-
 // Watch for external changes
 watch(
   () => props.monthValue,
@@ -92,6 +83,11 @@ watch(
   () => props.yearValue,
   (newVal) => (year.value = newVal)
 );
+
+// Watch for internal changes and emit them
+watch(month, (newVal) => emit('update:month', newVal));
+watch(day, (newVal) => emit('update:day', newVal));
+watch(year, (newVal) => emit('update:year', newVal));
 </script>
 
 <style scoped>

@@ -105,14 +105,47 @@ export function useCheckoutValidation() {
   const v$ = useVuelidate(rules, form);
 
   const birthDateError = computed(() => {
-    const birthFields = [
-      v$.value.birthMonth,
-      v$.value.birthDay,
-      v$.value.birthYear,
-    ];
-    return birthFields.some((field) => field.$error)
-      ? 'Please select a complete date of birth'
-      : undefined;
+    // Check if any birth field is empty (but not all are empty)
+    const hasMonth = !!form.birthMonth;
+    const hasDay = !!form.birthDay;
+    const hasYear = !!form.birthYear;
+
+    const filledFields = [hasMonth, hasDay, hasYear].filter(Boolean).length;
+
+    // Check if validation has been triggered (any field is dirty/touched)
+    const hasBeenTouched =
+      v$.value.birthMonth.$dirty ||
+      v$.value.birthDay.$dirty ||
+      v$.value.birthYear.$dirty;
+
+    // Debug logging
+    console.log('Birth date validation:', {
+      hasMonth,
+      hasDay,
+      hasYear,
+      filledFields,
+      hasBeenTouched,
+      monthValue: form.birthMonth,
+      dayValue: form.birthDay,
+      yearValue: form.birthYear,
+    });
+
+    // If validation has been triggered and no fields are filled, show required error
+    if (hasBeenTouched && filledFields === 0) {
+      return 'Please select a complete date of birth';
+    }
+
+    // If some fields are filled but not all, show error
+    if (filledFields > 0 && filledFields < 3) {
+      return 'Please select a complete date of birth';
+    }
+
+    // If all fields are filled but age validation fails
+    if (filledFields === 3 && v$.value.birthYear.$error) {
+      return 'You must be at least 18 years old';
+    }
+
+    return undefined;
   });
 
   const clearForm = () => {
