@@ -198,10 +198,11 @@ const genderOptions = [
 ];
 
 // Helper function to get field errors
-const getFieldError = (fieldName: keyof typeof v$.value) => {
+function getFieldError(fieldName: keyof typeof v$.value): string | undefined {
   const field = v$.value[fieldName];
-  return field.$error ? String(field.$errors[0].$message) : undefined;
-};
+  if (!field.$error) return;
+  return field.$errors.find((e: { $message: string }) => e.$message)?.$message;
+}
 
 // Initialize on mount
 onMounted(async () => {
