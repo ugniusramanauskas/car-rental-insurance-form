@@ -1,5 +1,5 @@
 <template>
-  <div class="border pt-4 px-6 pb-2 bg-[#FAFAFA] rounded">
+  <div class="border pt-4 px-3 sm:px-6 pb-2 bg-[#FAFAFA] rounded">
     <slot />
   </div>
 </template>

@@ -1,13 +1,13 @@
 <template>
   <div
-    class="min-h-screen bg-gray-100 flex flex-col gap-9 pb-[34px] font-helvetica"
+    class="min-h-screen bg-gray-100 flex flex-col gap-[19px] sm:gap-9 pb-[34px] font-helvetica"
   >
     <AppHeader />
 
     <main class="flex-grow flex items-center justify-center">
       <form
         @submit.prevent="submit"
-        class="bg-white px-10 py-[34px] rounded w-full max-w-[408px]"
+        class="bg-white px-5 sm:px-10 py-[22px] sm:py-[34px] rounded w-full max-w-[290px] sm:max-w-[408px]"
       >
         <div class="grid grid-cols-1 gap-[34px]">
           <h2 class="text-xl font-bold text-center">
@@ -20,7 +20,7 @@
               <input
                 v-model="form.fullName"
                 type="text"
-                placeholder="Full Name"
+                placeholder=""
                 :class="['input', { 'border-red-500': v$.fullName.$error }]"
               />
             </FormField>
@@ -29,7 +29,7 @@
               <input
                 v-model="form.email"
                 type="email"
-                placeholder="Email"
+                placeholder=""
                 :class="['input', { 'border-red-500': v$.email.$error }]"
               />
             </FormField>
@@ -38,14 +38,13 @@
               <input
                 v-model="form.zip"
                 type="text"
-                placeholder="Zip Code"
+                placeholder="10001"
                 :class="['input', { 'border-red-500': v$.zip.$error }]"
               />
             </FormField>
 
-            <!-- Date of Birth -->
             <DateSelector
-              label="Date of Birth"
+              label="Birth date"
               :error="birthDateError"
               :has-error="
                 v$.birthMonth.$error ||
@@ -60,7 +59,6 @@
               @update:year="form.birthYear = $event"
             />
 
-            <!-- Gender Selection -->
             <RadioGroup
               label="Gender"
               v-model="form.gender"
@@ -79,7 +77,7 @@
                 <input
                   v-model="form.cardHolder"
                   type="text"
-                  placeholder="Card Holder Name"
+                  placeholder=""
                   :class="['input', { 'border-red-500': v$.cardHolder.$error }]"
                 />
               </FormField>
@@ -92,7 +90,7 @@
                   ref="cardNumberInput"
                   v-model="form.cardNumber"
                   type="text"
-                  placeholder="Card Number"
+                  placeholder=""
                   :class="['input', { 'border-red-500': v$.cardNumber.$error }]"
                 />
               </FormField>
@@ -111,7 +109,7 @@
                   <input
                     v-model="form.cvv"
                     type="text"
-                    placeholder="CVV"
+                    placeholder=""
                     :class="['input', { 'border-red-500': v$.cvv.$error }]"
                   />
                 </FormField>
@@ -226,7 +224,6 @@ async function submit() {
   }
 
   try {
-    // Prepare form data for submission
     const formData = {
       fullName: form.fullName,
       email: form.email,
@@ -244,7 +241,6 @@ async function submit() {
       submittedAt: new Date().toISOString(),
     };
 
-    // Submit to httpbin.org using axios
     const response = await axios.post('https://httpbin.org/post', formData, {
       headers: {
         'Content-Type': 'application/json',
