@@ -173,6 +173,7 @@
 
 <script setup lang="ts">
 import { onMounted, watch, ref } from 'vue';
+import axios from 'axios';
 import AppHeader from '@/components/AppHeader.vue';
 import AppFooter from '@/components/AppFooter.vue';
 import FormField from '@/components/FormField.vue';
@@ -225,7 +226,7 @@ async function submit() {
   }
 
   try {
-    // Simulate API submission
+    // Prepare form data for submission
     const formData = {
       fullName: form.fullName,
       email: form.email,
@@ -243,9 +244,14 @@ async function submit() {
       submittedAt: new Date().toISOString(),
     };
 
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-    console.log('Form submitted:', JSON.stringify(formData, null, 2));
+    // Submit to httpbin.org using axios
+    const response = await axios.post('https://httpbin.org/post', formData, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    console.log('Form submitted successfully:', response.data);
 
     clearForm();
 
