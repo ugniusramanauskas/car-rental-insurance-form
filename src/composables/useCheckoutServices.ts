@@ -50,13 +50,8 @@ export function useCheckoutServices(form: FormData) {
     }
   };
 
-  const setRandomGender = () => {
-    form.gender = Math.random() > 0.5 ? 'female' : 'male';
-  };
-
   return {
     fetchZipCode,
     initializeCleave,
-    setRandomGender,
   };
 }

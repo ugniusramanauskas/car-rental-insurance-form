@@ -16,39 +16,38 @@ export interface FormData {
   cvv: string;
 }
 
+const createInitialForm = (): FormData => ({
+  fullName: '',
+  email: '',
+  zip: '',
+  birthMonth: '',
+  birthDay: '',
+  birthYear: '',
+  gender: 'female',
+  cardHolder: '',
+  cardNumber: '',
+  expiry: '',
+  cvv: '',
+});
+
 export function useCheckoutValidation() {
-  const form = reactive<FormData>({
-    fullName: '',
-    email: '',
-    zip: '',
-    birthMonth: '',
-    birthDay: '',
-    birthYear: '',
-    gender: '',
-    cardHolder: '',
-    cardNumber: '',
-    expiry: '',
-    cvv: '',
-  });
+  const form = reactive<FormData>(createInitialForm());
 
   // Custom validators
-  const isValidFullName = helpers.withMessage(
-    'Enter at least two words, 2+ letters each',
-    (value: string) => {
-      if (!value) return false;
-      const words = value.trim().split(/\s+/);
-      return words.length >= 2 && words.every((word) => word.length >= 2);
-    }
-  );
-
-  const isValidCardNumber = helpers.withMessage(
-    'Card number must be 16 digits',
-    (value: string) => !value || /^\d{16}$/.test(value.replace(/\s/g, ''))
-  );
-
-  const isValidExpiry = helpers.withMessage(
-    "Can't be in the past",
-    (value: string) => {
+  const validators = {
+    fullName: helpers.withMessage(
+      'Enter at least two words, 2+ letters each',
+      (value: string) => {
+        if (!value) return false;
+        const words = value.trim().split(/\s+/);
+        return words.length >= 2 && words.every((word) => word.length >= 2);
+      }
+    ),
+    cardNumber: helpers.withMessage(
+      'Card number must be 16 digits',
+      (value: string) => !value || /^\d{16}$/.test(value.replace(/\s/g, ''))
+    ),
+    expiry: helpers.withMessage("Can't be in the past", (value: string) => {
       if (!value || !/^(0[1-9]|1[0-2])\/\d{2}$/.test(value)) return false;
       const [month, year] = value.split('/');
       const currentDate = new Date();
@@ -58,25 +57,20 @@ export function useCheckoutValidation() {
       const expYear = parseInt(year);
       const expMonth = parseInt(month);
 
-      if (expYear > currentYear) return true;
-      if (expYear === currentYear && expMonth >= currentMonth) return true;
-      return false;
-    }
-  );
-
-  const isValidCVV = helpers.withMessage(
-    'CVV must be 3 digits',
-    (value: string) => !value || /^\d{3}$/.test(value)
-  );
-
-  const isValidZip = helpers.withMessage(
-    'Zip code must be 5 digits',
-    (value: string) => !value || /^\d{5}$/.test(value)
-  );
-
-  const isValidAge = helpers.withMessage(
-    'You must be at least 18 years old',
-    () => {
+      return (
+        expYear > currentYear ||
+        (expYear === currentYear && expMonth >= currentMonth)
+      );
+    }),
+    cvv: helpers.withMessage(
+      'CVV must be 3 digits',
+      (value: string) => !value || /^\d{3}$/.test(value)
+    ),
+    zip: helpers.withMessage(
+      'Zip code must be 5 digits',
+      (value: string) => !value || /^\d{5}$/.test(value)
+    ),
+    age: helpers.withMessage('You must be at least 18 years old', () => {
       if (!form.birthMonth || !form.birthDay || !form.birthYear) return false;
       const birthDate = new Date(
         parseInt(form.birthYear),
@@ -87,48 +81,42 @@ export function useCheckoutValidation() {
       const age = today.getFullYear() - birthDate.getFullYear();
       const monthDiff = today.getMonth() - birthDate.getMonth();
 
-      if (
-        monthDiff < 0 ||
+      return monthDiff < 0 ||
         (monthDiff === 0 && today.getDate() < birthDate.getDate())
-      ) {
-        return age - 1 >= 18;
-      }
-      return age >= 18;
-    }
-  );
+        ? age - 1 >= 18
+        : age >= 18;
+    }),
+  };
 
-  // Validation rules
   const rules = {
-    fullName: { required, isValidFullName },
+    fullName: { required, isValidFullName: validators.fullName },
     email: { required, email },
-    zip: { required, isValidZip },
+    zip: { required, isValidZip: validators.zip },
     birthMonth: { required },
     birthDay: { required },
-    birthYear: { required, isValidAge },
+    birthYear: { required, isValidAge: validators.age },
     gender: { required },
     cardHolder: { required, minLength: minLength(2) },
-    cardNumber: { required, isValidCardNumber },
-    expiry: { required, isValidExpiry },
-    cvv: { required, isValidCVV },
+    cardNumber: { required, isValidCardNumber: validators.cardNumber },
+    expiry: { required, isValidExpiry: validators.expiry },
+    cvv: { required, isValidCVV: validators.cvv },
   };
 
   const v$ = useVuelidate(rules, form);
 
   const birthDateError = computed(() => {
-    if (
-      v$.value.birthMonth.$error ||
-      v$.value.birthDay.$error ||
-      v$.value.birthYear.$error
-    ) {
-      return 'Please select a complete date of birth';
-    }
-    return undefined;
+    const birthFields = [
+      v$.value.birthMonth,
+      v$.value.birthDay,
+      v$.value.birthYear,
+    ];
+    return birthFields.some((field) => field.$error)
+      ? 'Please select a complete date of birth'
+      : undefined;
   });
 
   const clearForm = () => {
-    Object.keys(form).forEach((key) => {
-      (form as any)[key] = '';
-    });
+    Object.assign(form, createInitialForm());
     v$.value.$reset();
   };
 

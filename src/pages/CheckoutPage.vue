@@ -189,8 +189,7 @@ const expiryInput = ref<HTMLInputElement | null>(null);
 
 // Use composables
 const { form, v$, birthDateError, clearForm } = useCheckoutValidation();
-const { fetchZipCode, initializeCleave, setRandomGender } =
-  useCheckoutServices(form);
+const { fetchZipCode, initializeCleave } = useCheckoutServices(form);
 
 // Gender options for RadioGroup
 const genderOptions = [
@@ -208,7 +207,6 @@ const getFieldError = (fieldName: keyof typeof v$.value) => {
 onMounted(async () => {
   await fetchZipCode();
   initializeCleave(cardNumberInput, expiryInput);
-  setRandomGender();
 });
 
 // Watch full name and auto-fill card holder
@@ -262,7 +260,6 @@ async function submit() {
       showSuccess.value = false;
       // Re-initialize auto-fill
       await fetchZipCode();
-      setRandomGender();
     }, 3000);
   } catch (error) {
     console.error('Form submission error:', error);
