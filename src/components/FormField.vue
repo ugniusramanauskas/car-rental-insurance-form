@@ -1,11 +1,17 @@
 <template>
-  <div class="grid grid-cols-1 gap-1">
+  <div class="space-y-1">
     <label class="block text-label font-bold text-gray-700">
       {{ label }}
     </label>
     <slot />
-    <div v-if="error" class="text-red-500 text-sm">
-      {{ error }}
+    <!-- Minimal fixed height container for error messages to prevent layout shift -->
+    <div class="min-h-[1rem]">
+      <div
+        v-if="error"
+        class="text-red-500 text-sm leading-none transition-opacity duration-200"
+      >
+        {{ error }}
+      </div>
     </div>
   </div>
 </template>

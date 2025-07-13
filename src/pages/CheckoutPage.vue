@@ -13,7 +13,7 @@
           Get your Car Insurance for $9.99
         </h2>
 
-        <div class="grid grid-cols-1 gap-5">
+        <div class="grid grid-cols-1 gap-1">
           <FormField
             label="Full Name"
             :error="
@@ -331,7 +331,7 @@ const form = reactive({
 
 // Custom validators
 const isValidFullName = helpers.withMessage(
-  'Full name must contain at least two words with 2+ characters each',
+  'Enter at least two words, 2+ letters each',
   (value: string) => {
     if (!value) return false;
     const words = value.trim().split(/\s+/);
@@ -345,7 +345,7 @@ const isValidCardNumber = helpers.withMessage(
 );
 
 const isValidExpiry = helpers.withMessage(
-  'Expiry date cannot be in the past',
+  "Can't be in the past",
   (value: string) => {
     if (!value || !/^(0[1-9]|1[0-2])\/\d{2}$/.test(value)) return false;
     const [month, year] = value.split('/');
@@ -500,7 +500,6 @@ async function submit() {
   const isFormCorrect = await v$.value.$validate();
   if (!isFormCorrect) {
     isSubmitting.value = false;
-    alert('Please fix the errors before submitting');
     return;
   }
 
@@ -541,11 +540,6 @@ async function submit() {
       showSuccess.value = false;
       // Re-initialize auto-fill
       await fetchZipCode();
-      if (Math.random() > 0.5) {
-        form.gender = 'female';
-      } else {
-        form.gender = 'male';
-      }
     }, 3000);
   } catch (error) {
     console.error('Form submission error:', error);
