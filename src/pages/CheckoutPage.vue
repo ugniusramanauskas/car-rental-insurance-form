@@ -187,30 +187,25 @@ const showSuccess = ref(false);
 const cardNumberInput = ref<HTMLInputElement | null>(null);
 const expiryInput = ref<HTMLInputElement | null>(null);
 
-// Use composables
 const { form, v$, birthDateError, clearForm } = useCheckoutValidation();
 const { fetchZipCode, initializeCleave } = useCheckoutServices(form);
 
-// Gender options for RadioGroup
 const genderOptions = [
   { value: 'female', label: 'Female' },
   { value: 'male', label: 'Male' },
 ];
 
-// Helper function to get field errors
 function getFieldError(fieldName: keyof typeof v$.value): string | undefined {
   const field = v$.value[fieldName];
   if (!field.$error) return;
   return field.$errors.find((e: { $message: string }) => e.$message)?.$message;
 }
 
-// Initialize on mount
 onMounted(async () => {
   await fetchZipCode();
   initializeCleave(cardNumberInput, expiryInput);
 });
 
-// Watch full name and auto-fill card holder
 watch(
   () => form.fullName,
   (newValue) => {
@@ -252,14 +247,12 @@ async function submit() {
     await new Promise((resolve) => setTimeout(resolve, 1000));
     console.log('Form submitted:', JSON.stringify(formData, null, 2));
 
-    // Clear form and reset validation
     clearForm();
 
-    // Show success message
     showSuccess.value = true;
     setTimeout(async () => {
       showSuccess.value = false;
-      // Re-initialize auto-fill
+
       await fetchZipCode();
     }, 3000);
   } catch (error) {
