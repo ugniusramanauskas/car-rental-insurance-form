@@ -1,6 +1,6 @@
 import { reactive, computed } from 'vue';
 import { useVuelidate } from '@vuelidate/core';
-import { required, email, minLength, helpers } from '@vuelidate/validators';
+import { required, minLength, helpers } from '@vuelidate/validators';
 
 export interface FormData {
   fullName: string;
@@ -41,6 +41,14 @@ export function useCheckoutValidation() {
         if (!value) return false;
         const words = value.trim().split(/\s+/);
         return words.length >= 2 && words.every((word) => word.length >= 2);
+      }
+    ),
+    email: helpers.withMessage(
+      'Please enter a valid email address',
+      (value: string) => {
+        if (!value) return false;
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(value);
       }
     ),
     cardNumber: helpers.withMessage(
@@ -90,7 +98,7 @@ export function useCheckoutValidation() {
 
   const rules = {
     fullName: { required, isValidFullName: validators.fullName },
-    email: { required, email },
+    email: { required, isValidEmail: validators.email },
     zip: { required, isValidZip: validators.zip },
     birthMonth: { required },
     birthDay: { required },
