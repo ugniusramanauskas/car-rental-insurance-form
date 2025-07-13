@@ -4,24 +4,16 @@ import Cleave from 'cleave.js';
 import type { FormData } from './useCheckoutValidation';
 
 export function useCheckoutServices(form: FormData) {
-  // Auto-fill zip code using geolocation API
   const fetchZipCode = async () => {
     try {
-      const response = await axios.get('https://freegeoip.live/json/');
-      if (response.data && response.data.zip_code) {
-        form.zip = response.data.zip_code;
+      const response = await axios.get('https://ipapi.co/json/', {
+        timeout: 5000,
+      });
+      if (response.data?.postal) {
+        form.zip = response.data.postal;
       }
     } catch (error) {
-      console.warn('Could not fetch zip code from geolocation service');
-      // Fallback to second service
-      try {
-        const response = await axios.get('https://freegeoip.app/json/');
-        if (response.data && response.data.zip_code) {
-          form.zip = response.data.zip_code;
-        }
-      } catch (fallbackError) {
-        console.warn('Could not fetch zip code from fallback service');
-      }
+      console.warn('Failed to fetch zip code:', error);
     }
   };
 
