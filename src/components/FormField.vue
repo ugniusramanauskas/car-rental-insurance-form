@@ -5,10 +5,10 @@
     </label>
     <slot />
     <!-- Minimal fixed height container for error messages to prevent layout shift -->
-    <div class="min-h-[1rem]">
+    <div class="min-h-3">
       <div
         v-if="error"
-        class="text-red-500 text-sm leading-none transition-opacity duration-200"
+        class="text-red-500 text-xs leading-none transition-opacity duration-200"
       >
         {{ error }}
       </div>

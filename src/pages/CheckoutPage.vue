@@ -7,244 +7,232 @@
     <main class="flex-grow flex items-center justify-center">
       <form
         @submit.prevent="submit"
-        class="bg-white p-10 rounded w-full max-w-[408px]"
+        class="bg-white px-10 py-[34px] rounded w-full max-w-[408px]"
       >
-        <h2 class="text-xl font-bold mb-6 text-center">
-          Get your Car Insurance for $9.99
-        </h2>
+        <div class="grid grid-cols-1 gap-[34px]">
+          <h2 class="text-xl font-bold text-center">
+            Get your Car Insurance for $9.99
+          </h2>
 
-        <div class="grid grid-cols-1 gap-1">
-          <FormField
-            label="Full Name"
-            :error="
-              v$.fullName.$error
-                ? String(v$.fullName.$errors[0].$message)
-                : undefined
-            "
-          >
-            <input
-              v-model="form.fullName"
-              type="text"
-              placeholder="Full Name"
-              :class="['input', { 'border-red-500': v$.fullName.$error }]"
-            />
-          </FormField>
-
-          <FormField
-            label="Email"
-            :error="
-              v$.email.$error ? String(v$.email.$errors[0].$message) : undefined
-            "
-          >
-            <input
-              v-model="form.email"
-              type="email"
-              placeholder="Email"
-              :class="['input', { 'border-red-500': v$.email.$error }]"
-            />
-          </FormField>
-
-          <FormField
-            label="Zip Code"
-            :error="
-              v$.zip.$error ? String(v$.zip.$errors[0].$message) : undefined
-            "
-          >
-            <input
-              v-model="form.zip"
-              type="text"
-              placeholder="Zip Code"
-              :class="['input', { 'border-red-500': v$.zip.$error }]"
-            />
-          </FormField>
-
-          <FormField label="Date of Birth" :error="birthDateError">
-            <div class="flex gap-2">
-              <div class="flex-1">
-                <select
-                  v-model="form.birthMonth"
-                  :class="['input', { 'border-red-500': v$.birthMonth.$error }]"
-                >
-                  <option disabled value="">Month</option>
-                  <option v-for="m in 12" :key="m" :value="m">{{ m }}</option>
-                </select>
-              </div>
-              <div class="flex-1">
-                <select
-                  v-model="form.birthDay"
-                  :class="['input', { 'border-red-500': v$.birthDay.$error }]"
-                >
-                  <option disabled value="">Day</option>
-                  <option v-for="d in 31" :key="d" :value="d">{{ d }}</option>
-                </select>
-              </div>
-              <div class="flex-1">
-                <select
-                  v-model="form.birthYear"
-                  :class="['input', { 'border-red-500': v$.birthYear.$error }]"
-                >
-                  <option disabled value="">Year</option>
-                  <option v-for="y in years" :key="y" :value="y">
-                    {{ y }}
-                  </option>
-                </select>
-              </div>
-            </div>
-          </FormField>
-
-          <FormField
-            label="Gender"
-            :error="v$.gender.$error ? 'Please select your gender' : undefined"
-          >
-            <div class="grid grid-cols-2 gap-3">
-              <label
-                class="flex relative grow items-center justify-start gap-2 px-6 py-2 border rounded cursor-pointer transition-all duration-300 text-sm font-medium focus:outline-none h-[43px] transform hover:scale-105"
-                :class="{
-                  'bg-[#2888E0] text-white border-[#2888E0] shadow-lg':
-                    form.gender === 'female',
-                  'text-gray-900 bg-white border-[#D8D6D6] hover:border-[#2888E0]':
-                    form.gender !== 'female',
-                }"
-              >
-                <span
-                  class="w-4 h-4 rounded-full border-2 flex items-center justify-center transition-all duration-300"
-                  :class="{
-                    'border-white bg-white': form.gender === 'female',
-                    'border-gray-400': form.gender !== 'female',
-                  }"
-                >
-                  <span
-                    class="w-2 h-2 rounded-full bg-[#2888E0] transition-all duration-300"
-                    :class="{
-                      'opacity-100 scale-100': form.gender === 'female',
-                      'opacity-0 scale-0': form.gender !== 'female',
-                    }"
-                  ></span>
-                </span>
-                <input
-                  v-model="form.gender"
-                  type="radio"
-                  value="female"
-                  class="sr-only"
-                />
-                <span
-                  class="transition-all duration-300"
-                  :class="{
-                    'text-white': form.gender === 'female',
-                    'text-[#2F2F30]': form.gender !== 'female',
-                  }"
-                  >Female</span
-                >
-              </label>
-
-              <label
-                class="flex relative grow items-center justify-start gap-2 px-6 py-2 border rounded cursor-pointer transition-all duration-300 text-sm font-medium focus:outline-none h-[43px] transform hover:scale-105"
-                :class="{
-                  'bg-[#2888E0] text-white border-[#2888E0] shadow-lg':
-                    form.gender === 'male',
-                  'text-gray-900 bg-white border-[#D8D6D6] hover:border-[#2888E0]':
-                    form.gender !== 'male',
-                }"
-              >
-                <span
-                  class="w-4 h-4 rounded-full border-2 flex items-center justify-center transition-all duration-300"
-                  :class="{
-                    'border-white bg-white': form.gender === 'male',
-                    'border-gray-400': form.gender !== 'male',
-                  }"
-                >
-                  <span
-                    class="w-2 h-2 rounded-full bg-[#2888E0] transition-all duration-300"
-                    :class="{
-                      'opacity-100 scale-100': form.gender === 'male',
-                      'opacity-0 scale-0': form.gender !== 'male',
-                    }"
-                  ></span>
-                </span>
-                <input
-                  v-model="form.gender"
-                  type="radio"
-                  value="male"
-                  class="sr-only"
-                />
-                <span
-                  class="transition-all duration-300"
-                  :class="{
-                    'text-white': form.gender === 'male',
-                    'text-[#2F2F30]': form.gender !== 'male',
-                  }"
-                  >Male</span
-                >
-              </label>
-            </div>
-          </FormField>
-
-          <div
-            class="border pt-4 px-6 pb-6 bg-[#FAFAFA] rounded grid grid-cols-1 gap-3"
-          >
+          <div class="grid grid-cols-1 gap-1">
             <FormField
-              label="Card Holder Name"
+              label="Full Name"
               :error="
-                v$.cardHolder.$error
-                  ? String(v$.cardHolder.$errors[0].$message)
+                v$.fullName.$error
+                  ? String(v$.fullName.$errors[0].$message)
                   : undefined
               "
             >
               <input
-                v-model="form.cardHolder"
+                v-model="form.fullName"
                 type="text"
-                placeholder="Card Holder Name"
-                :class="['input', { 'border-red-500': v$.cardHolder.$error }]"
+                placeholder="Full Name"
+                :class="['input', { 'border-red-500': v$.fullName.$error }]"
               />
             </FormField>
 
             <FormField
-              label="Card Number"
+              label="Email"
               :error="
-                v$.cardNumber.$error
-                  ? String(v$.cardNumber.$errors[0].$message)
+                v$.email.$error
+                  ? String(v$.email.$errors[0].$message)
                   : undefined
               "
             >
               <input
-                ref="cardNumberInput"
-                v-model="form.cardNumber"
-                type="text"
-                placeholder="Card Number"
-                :class="['input', { 'border-red-500': v$.cardNumber.$error }]"
+                v-model="form.email"
+                type="email"
+                placeholder="Email"
+                :class="['input', { 'border-red-500': v$.email.$error }]"
               />
             </FormField>
 
-            <div class="flex gap-2">
+            <FormField
+              label="Zip Code"
+              :error="
+                v$.zip.$error ? String(v$.zip.$errors[0].$message) : undefined
+              "
+            >
+              <input
+                v-model="form.zip"
+                type="text"
+                placeholder="Zip Code"
+                :class="['input', { 'border-red-500': v$.zip.$error }]"
+              />
+            </FormField>
+
+            <FormField label="Date of Birth" :error="birthDateError">
+              <div class="flex gap-2">
+                <div class="flex-1">
+                  <select
+                    v-model="form.birthMonth"
+                    :class="[
+                      'input',
+                      { 'border-red-500': v$.birthMonth.$error },
+                    ]"
+                  >
+                    <option disabled value="">Month</option>
+                    <option v-for="m in 12" :key="m" :value="m">{{ m }}</option>
+                  </select>
+                </div>
+                <div class="flex-1">
+                  <select
+                    v-model="form.birthDay"
+                    :class="['input', { 'border-red-500': v$.birthDay.$error }]"
+                  >
+                    <option disabled value="">Day</option>
+                    <option v-for="d in 31" :key="d" :value="d">{{ d }}</option>
+                  </select>
+                </div>
+                <div class="flex-1">
+                  <select
+                    v-model="form.birthYear"
+                    :class="[
+                      'input',
+                      { 'border-red-500': v$.birthYear.$error },
+                    ]"
+                  >
+                    <option disabled value="">Year</option>
+                    <option v-for="y in years" :key="y" :value="y">
+                      {{ y }}
+                    </option>
+                  </select>
+                </div>
+              </div>
+            </FormField>
+
+            <FormField
+              label="Gender"
+              :error="
+                v$.gender.$error ? 'Please select your gender' : undefined
+              "
+            >
+              <div class="grid grid-cols-2 gap-3">
+                <label
+                  class="flex relative grow items-center justify-start gap-2 px-6 py-2 border rounded cursor-pointer transition-all duration-300 text-sm font-medium focus:outline-none h-[43px] transform hover:scale-105"
+                  :class="{
+                    'bg-[#2888E0] text-white border-[#2888E0]':
+                      form.gender === 'female',
+                    'text-gray-900 bg-white border-[#D8D6D6]':
+                      form.gender !== 'female',
+                  }"
+                >
+                  <span
+                    class="w-4 h-4 rounded-full border-4 flex items-center justify-center peer-checked:bg-white border-white shadow-custom-glow peer-checked:shadow-glow-soft transition-all"
+                  >
+                    <span
+                      class="w-2 h-2 rounded-full bg-[#2888E0] peer-checked:block hidden"
+                    ></span>
+                  </span>
+                  <input
+                    v-model="form.gender"
+                    type="radio"
+                    value="female"
+                    class="sr-only peer"
+                  />
+                  <span
+                    class="text-[#2F2F30] peer-checked:text-white font-normal"
+                    >Female</span
+                  >
+                </label>
+
+                <label
+                  class="flex relative grow items-center justify-start gap-2 px-6 py-2 border rounded cursor-pointer transition-all duration-300 text-sm font-medium focus:outline-none h-[43px] transform hover:scale-105"
+                  :class="{
+                    'bg-[#2888E0] text-white border-[#2888E0]':
+                      form.gender === 'male',
+                    'text-gray-900 bg-white border-[#D8D6D6]':
+                      form.gender !== 'male',
+                  }"
+                >
+                  <span
+                    class="w-4 h-4 rounded-full border-4 flex items-center justify-center peer-checked:bg-white border-white shadow-custom-glow peer-checked:shadow-glow-soft transition-all"
+                  >
+                    <span
+                      class="w-2 h-2 rounded-full bg-[#2888E0] peer-checked:block hidden"
+                    ></span>
+                  </span>
+                  <input
+                    v-model="form.gender"
+                    type="radio"
+                    value="male"
+                    class="sr-only peer"
+                  />
+                  <span
+                    class="text-[#2F2F30] peer-checked:text-white font-normal"
+                    >Male</span
+                  >
+                </label>
+              </div>
+            </FormField>
+
+            <div class="border pt-4 px-6 pb-2 bg-[#FAFAFA] rounded">
               <FormField
-                label="Expiry Date"
+                label="Card Holder Name"
                 :error="
-                  v$.expiry.$error
-                    ? String(v$.expiry.$errors[0].$message)
+                  v$.cardHolder.$error
+                    ? String(v$.cardHolder.$errors[0].$message)
                     : undefined
                 "
               >
                 <input
-                  ref="expiryInput"
-                  v-model="form.expiry"
+                  v-model="form.cardHolder"
                   type="text"
-                  placeholder="MM/YY"
-                  :class="['input', { 'border-red-500': v$.expiry.$error }]"
+                  placeholder="Card Holder Name"
+                  :class="['input', { 'border-red-500': v$.cardHolder.$error }]"
                 />
               </FormField>
+
               <FormField
-                label="CVV"
+                label="Card Number"
                 :error="
-                  v$.cvv.$error ? String(v$.cvv.$errors[0].$message) : undefined
+                  v$.cardNumber.$error
+                    ? String(v$.cardNumber.$errors[0].$message)
+                    : undefined
                 "
               >
                 <input
-                  v-model="form.cvv"
+                  ref="cardNumberInput"
+                  v-model="form.cardNumber"
                   type="text"
-                  placeholder="CVV"
-                  :class="['input', { 'border-red-500': v$.cvv.$error }]"
+                  placeholder="Card Number"
+                  :class="['input', { 'border-red-500': v$.cardNumber.$error }]"
                 />
               </FormField>
+
+              <div class="flex gap-2">
+                <FormField
+                  label="Expiry Date"
+                  :error="
+                    v$.expiry.$error
+                      ? String(v$.expiry.$errors[0].$message)
+                      : undefined
+                  "
+                >
+                  <input
+                    ref="expiryInput"
+                    v-model="form.expiry"
+                    type="text"
+                    placeholder="MM/YY"
+                    :class="['input', { 'border-red-500': v$.expiry.$error }]"
+                  />
+                </FormField>
+                <FormField
+                  label="CVV"
+                  :error="
+                    v$.cvv.$error
+                      ? String(v$.cvv.$errors[0].$message)
+                      : undefined
+                  "
+                >
+                  <input
+                    v-model="form.cvv"
+                    type="text"
+                    placeholder="CVV"
+                    :class="['input', { 'border-red-500': v$.cvv.$error }]"
+                  />
+                </FormField>
+              </div>
             </div>
           </div>
 
@@ -257,39 +245,39 @@
               {{ isSubmitting ? 'SUBMITTING...' : 'CONTINUE' }}
             </span>
           </button>
+        </div>
 
-          <!-- Success Message -->
-          <div
-            v-if="showSuccess"
-            class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
-          >
-            <div class="bg-white p-8 rounded-lg shadow-xl max-w-md w-full mx-4">
-              <div class="text-center">
-                <div
-                  class="w-16 h-16 mx-auto mb-4 bg-green-100 rounded-full flex items-center justify-center"
+        <!-- Success Message -->
+        <div
+          v-if="showSuccess"
+          class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+        >
+          <div class="bg-white p-8 rounded-lg shadow-xl max-w-md w-full mx-4">
+            <div class="text-center">
+              <div
+                class="w-16 h-16 mx-auto mb-4 bg-green-100 rounded-full flex items-center justify-center"
+              >
+                <svg
+                  class="w-8 h-8 text-green-600"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
                 >
-                  <svg
-                    class="w-8 h-8 text-green-600"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M5 13l4 4L19 7"
-                    ></path>
-                  </svg>
-                </div>
-                <h3 class="text-xl font-bold text-gray-900 mb-2">
-                  Form Submitted Successfully!
-                </h3>
-                <p class="text-gray-600">
-                  Your insurance application has been submitted and is being
-                  processed.
-                </p>
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M5 13l4 4L19 7"
+                  ></path>
+                </svg>
               </div>
+              <h3 class="text-xl font-bold text-gray-900 mb-2">
+                Form Submitted Successfully!
+              </h3>
+              <p class="text-gray-600">
+                Your insurance application has been submitted and is being
+                processed.
+              </p>
             </div>
           </div>
         </div>
@@ -433,12 +421,7 @@ onMounted(async () => {
   await fetchZipCode();
   initializeCleave();
 
-  // Set random gender (requirement: can be selected before page loads)
-  if (Math.random() > 0.5) {
-    form.gender = 'female';
-  } else {
-    form.gender = 'male';
-  }
+  form.gender = 'female';
 });
 
 // Watch full name and auto-fill card holder
